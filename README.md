@@ -8,6 +8,8 @@ Create an amazon-like storefront using Node.js and MySQL.
 - Clone the repository. (https://github.com/k-darc/bamazon)
 - Run "npm install" in Terminal.
 - Run "node bamazonCustomer.js".
+- Select products by using their ID (1, 2, 3, etc...).
+- Choose your quantity (1, 2, 3, etc...).
 - Run "ctrl + c" to exit.
 
 ## How Bamazon Works

@@ -1,5 +1,3 @@
-
-
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
@@ -17,57 +15,55 @@ connection.connect(function (err) {
     makeTable();
 });
 
-var makeTable = function() {
-    connection.query("SELECT * FROM products", function(err,res){
-        for(var i = 0; i < res.length; i++){
-            console.log(res[i].itemid+" || "+res[i].productname+" || "+res[i].departmentname+" || "+res[i].price+" || "+res[i].stockquantity+"\n");
+var makeTable = function () {
+    connection.query("SELECT * FROM products", function (err, res) {
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].itemid + " || " + res[i].productname + " || " + res[i].departmentname + " || " + res[i].price + " || " + res[i].stockquantity + "\n");
         }
-    promptCustomer(res);
+        promptCustomer(res);
     })
 }
 
-var promptCustomer = function(res){
+var promptCustomer = function (res) {
     inquirer.prompt([{
-        type:"input",
-        name:"choice",
-        message:"What would you like to purchase? [Quit with Q]"
-    }]).then(function(answer){
+        type: "input",
+        name: "choice",
+        message: "What would you like to purchase? [Quit with Q]"
+    }]).then(function (answer) {
         var correct = false;
-        if(answer.choice.toUpperCase()=="Q"){
+        console.log(answer.choice);
+        var choice = parseInt(answer.choice);
+        var index = choice - 1;
+        checkQuant(res[index]);
 
-        }
-        for(var i=0;i<res.length;i++){
-            if(res[i].productname==answer.choice){
-                correct=true;
-                var product=answer.choice;
-                var id=i;
-                inquirer.prompt({
-                    type:"input",
-                    name:"choice",
-                    message:"What would you like to buy?",
-                    validate: function(value){
-                        if(isNaN(value)==false){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                }).then(function(answer){
-                    if((res[id].stockquantity-answer.quant)>0){
-                        connection.query("UPDATE products SET stockquantity='"+(res[id].stockquantity-answer.quant)+"' WHERE productname='"+product+"'", function(err,res2){
-                            console.log("Product Bought!");
-                            makeTable();
-                        })
-                    } else {
-                        console.log("Not a valid selection!");
-                        promptCustomer(res);
-                    }
-                })
+        if (answer.choice.toUpperCase() == "Q") {}
+    })
+}
+
+function checkQuant(data) {
+    console.log(data);
+    correct = true;
+    inquirer.prompt({
+        type: "input",
+        name: "choice",
+        message: "How many would you like?",
+        validate: function (value) {
+            if (isNaN(value) == false) {
+                return true;
+            } else {
+                return false;
             }
         }
-        if(i==res.length && correct==false){
+    }).then(function (answer) {
+        if ((data.stockquantity - answer.choice) > 0) {
+            connection.query("UPDATE products SET stockquantity='" + (data.stockquantity - answer.choice) + "' WHERE productname='" + data.productname + "'", function (err, res2) {
+                console.log("Product Bought!");
+                makeTable();
+            })
+        } else {
             console.log("Not a valid selection!");
-            promptCustomer(res);
+            promptCustomer(data);
         }
     })
+
 }
