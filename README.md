@@ -39,4 +39,4 @@ Create an amazon-like storefront using Node.js and MySQL.
 
 ## Author
 
-* Kevin D - [Kevin D](https://github.com/k-darc)
+*[Kevin D](https://github.com/k-darc)
